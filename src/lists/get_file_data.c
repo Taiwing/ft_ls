@@ -6,7 +6,7 @@
 /*   By: yforeau <yforeau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/24 21:12:52 by yforeau           #+#    #+#             */
-/*   Updated: 2019/03/03 16:12:20 by yforeau          ###   ########.fr       */
+/*   Updated: 2019/03/29 23:38:05 by yforeau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,38 @@ int	get_file_data_columns(char *path, t_lsfdata *lsf,
 	(void)path;
 	if (fp)
 		lsf->isdir = (fp->d_type == DT_DIR);
+	++(cfg->lsp.list_len);
+	l = ft_strlen(lsf->name);
+	if (cfg->lsp.name_max < l)
+		cfg->lsp.name_max = l;
+	return (0);
+}
+
+int	get_file_data_one_stat(char *path, t_lsfdata *lsf,
+		t_lsconfig *cfg, struct dirent *fp)
+{
+	if (lstat(path, &lsf->stats))
+	{
+		add_error(path, cfg);
+		return (-1);
+	}
+	lsf->isdir = fp ? (fp->d_type == DT_DIR) :
+				((lsf->stats.st_mode & S_IFMT) == S_IFDIR);
+	return (0);
+}
+
+int	get_file_data_columns_stat(char *path, t_lsfdata *lsf,
+		t_lsconfig *cfg, struct dirent *fp)
+{
+	int	l;
+
+	if (lstat(path, &lsf->stats))
+	{
+		add_error(path, cfg);
+		return (-1);
+	}
+	lsf->isdir = fp ? (fp->d_type == DT_DIR) :
+				((lsf->stats.st_mode & S_IFMT) == S_IFDIR);
 	++(cfg->lsp.list_len);
 	l = ft_strlen(lsf->name);
 	if (cfg->lsp.name_max < l)

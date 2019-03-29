@@ -6,7 +6,7 @@
 /*   By: yforeau <yforeau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 11:41:58 by yforeau           #+#    #+#             */
-/*   Updated: 2019/03/07 17:44:04 by yforeau          ###   ########.fr       */
+/*   Updated: 2019/03/29 23:54:05 by yforeau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,20 @@ static void	set_sort_functions(t_lsconfig *cfg)
 	{
 		if (cfg->sortmode == S_ASCII)
 			cfg->cmp = strcmp_file_names_rev;
-		else if (cfg->sortmode == S_SIZE)
+		else if (cfg->sortmode == S_SIZE || cfg->sortmode == S_TIME)
 		{
-			cfg->sortf = sort_size_or_time;
-			cfg->cmp = cfg->reverse ? cmp_file_sizes_rev : cmp_file_sizes;
+			if (cfg->sortmode == S_SIZE)
+			{
+				cfg->sortf = sort_size_or_time;
+				cfg->cmp = cfg->reverse ? cmp_file_sizes_rev : cmp_file_sizes;
+			}
+			else
+				set_sort_time(cfg);
+			if (cfg->printmode == P_ONE)
+				cfg->get_file_data = get_file_data_one_stat;
+			else if (cfg->printmode == P_COLUMNS)
+				cfg->get_file_data = get_file_data_columns_stat;
 		}
-		else if (cfg->sortmode == S_TIME)
-			set_sort_time(cfg);
 		cfg->cmp2 = cfg->reverse ? strcmp_file_names_rev : cfg->cmp2;
 	}
 }
