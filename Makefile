@@ -1,8 +1,8 @@
 ############################## COMPILE VAR #####################################
 
 CC			=	gcc
-#CFLAGS		=	-Wall -Wextra -Werror
-CFLAGS		=	-g
+CFLAGS		=	-Wall -Wextra -Werror
+#CFLAGS		=	-g
 HDIR		=	includes
 SRCDIR		=	src
 SUB1D		=	libft
@@ -81,10 +81,10 @@ vpath			%.c	$(SRCDIR)
 
 all: $(NAME)
 
-$(NAME): libft.a $(ODIR) $(OBJ)
+$(NAME): $(SRCDIR)/$(SUB1D)/libft.a $(ODIR) $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(patsubst %.o,$(ODIR)/%.o,$(OBJ)) $(LIBS)
 
-libft.a:
+$(SRCDIR)/$(SUB1D)/libft.a:
 	make -C $(SRCDIR)/$(SUB1D)
 
 ls_acl_container.o: ft_collector.h
@@ -101,8 +101,10 @@ lsconfig.o: lsconfig.h lsfdata.h libft.h list_dirs.h list_dirs_r.h\
 set_opt.o: ls_options.h lsconfig.h lsfdata.h libft.h
 ft_ls_errors.o: lsconfig.h lsfdata.h libft.h
 g_acl_perms.o: g_acl_perms.h
-get_acl.o: get_acl.h lsconfig.h lsfdata.h libft.h
-get_acl_data.o: get_acl.h lsconfig.h lsfdata.h libft.h g_acl_perms.h
+get_acl.o: get_acl.h lsconfig.h lsfdata.h libft.h ls_acl_container.h\
+	ft_collector.h
+get_acl_data.o: get_acl.h lsconfig.h lsfdata.h libft.h g_acl_perms.h\
+	ls_acl_container.h ft_collector.h
 get_arg_data.o: get_long_data.h lsconfig.h lsfdata.h libft.h ft_ls_errors.h
 get_args.o: list_dirs.h lsconfig.h lsfdata.h libft.h ls_sort.h ft_ls_errors.h
 get_args_d.o: list_dirs.h lsconfig.h lsfdata.h libft.h ls_sort.h\
@@ -112,9 +114,9 @@ get_long_data.o: lsconfig.h lsfdata.h libft.h
 get_xattr.o: ft_ls_errors.h lsconfig.h lsfdata.h libft.h
 get_xattracl.o: get_acl.h lsconfig.h lsfdata.h libft.h get_xattr.h
 list_dirs.o: lsconfig.h lsfdata.h libft.h list_files.h ls_sort.h ls_print.h\
-	ft_ls_errors.h
+	ft_ls_errors.h ls_dir_container.h ft_collector.h
 list_dirs_r.o: lsconfig.h lsfdata.h libft.h list_files.h ls_sort.h ls_print.h\
-	ft_ls_errors.h list_dirs.h
+	ft_ls_errors.h list_dirs.h ls_dir_container.h ft_collector.h
 list_files.o: lsconfig.h lsfdata.h libft.h
 main.o: ls_option_parser.h lsconfig.h lsfdata.h libft.h get_args.h\
 	ls_dir_container.h ft_collector.h ls_acl_container.h
